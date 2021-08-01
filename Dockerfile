@@ -1,11 +1,11 @@
-FROM php:7.3-fpm
+FROM php:7.4-fpm
 
 LABEL maintainer="twb<1174865138@qq.com><github.com/twbworld>"
 LABEL description="构建php-phalcon-swoole-redis镜像"
 
-ARG PHALCON_VERSION=4.1.0
-ARG SWOOLE_VERSION=4.5.2
-ARG REDIS_VERSION=5.3.1
+ARG PHALCON_VERSION=4.1.2
+#ARG SWOOLE_VERSION=4.5.2
+#ARG REDIS_VERSION=5.3.1
 ARG PSR_VERSION=1.0.0
 ARG PHALCON_EXT_PATH=php7/64bits
 
@@ -20,7 +20,7 @@ RUN set -xe \
             ssh \
             cron \
         && rm -r /var/lib/apt/lists/* \
-        && docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ \
+        && docker-php-ext-configure gd --with-freetype=/usr/include/ --with-jpeg=/usr/include/ \
         && docker-php-ext-install -j$(nproc) \
             gd \
             bcmath \
@@ -37,8 +37,8 @@ RUN set -xe \
             sysvsem \
             sysvshm \
         && pecl install \
-            swoole-${SWOOLE_VERSION} \
-            redis-${REDIS_VERSION} \
+            swoole \
+            redis \
         && docker-php-ext-enable \
             redis \
             swoole \
