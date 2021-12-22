@@ -36,6 +36,7 @@ RUN set -xe \
             sysvmsg \
             sysvsem \
             sysvshm \
+            zip \
         && pecl install \
             swoole \
             redis \
