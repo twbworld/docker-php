@@ -19,6 +19,8 @@ RUN set -xe \
             git \
             ssh \
             cron \
+            zlib1g-dev \
+            libzip-dev \
         && rm -r /var/lib/apt/lists/* \
         && docker-php-ext-configure gd --with-freetype=/usr/include/ --with-jpeg=/usr/include/ \
         && docker-php-ext-install -j$(nproc) \
