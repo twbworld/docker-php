@@ -1,0 +1,44 @@
+name: main
+on:
+  workflow_dispatch: #github页面手动触发
+  push: #push即触发
+    tags:
+      - "v*.*"
+  pull_request:
+    tags:
+      - "v*.*"
+jobs:
+
+  review:
+    uses: twbworld/proxy/.github/workflows/review.yml@main
+    secrets: inherit #传递所有secrets, 被调用的不需要接收
+
+  dependency-review:
+    if: github.base_ref != '' || github.head_ref != ''
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/dependency-review-action@v3
+
+  get-image-name:
+    runs-on: ubuntu-latest
+    outputs:
+      IMAGE_NAME: ${{ steps.output-id.outputs.IMAGE_NAME }}
+    steps:
+      - id: output-id
+        run: |
+          if [ -n "$GITHUB_REPOSITORY" ]; then
+              IMAGE_NAME=${GITHUB_REPOSITORY#*/}
+              IMAGE_NAME=${IMAGE_NAME#*/}
+          fi
+          echo "IMAGE_NAME=${IMAGE_NAME}" >> $GITHUB_OUTPUT
+
+  push-images:
+    needs: get-image-name
+    uses: twbworld/proxy/.github/workflows/push-images.yaml@main
+    secrets: inherit #传递所有secrets, 被调用的不需要接收
+    with:
+      DOCKERHUB_IMAGENAME: ${{ needs.get-tags.outputs.IMAGE_NAME }}
+      DOCKERHUB_USERNAME: ${{ vars.DOCKERHUB_USERNAME }}
