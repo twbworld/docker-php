@@ -1,13 +1,15 @@
-FROM php:7.4-fpm
+FROM --platform=$TARGETPLATFORM php:7.4-fpm
 
-LABEL maintainer="twb<1174865138@qq.com><github.com/twbworld>"
-LABEL description="构建php-phalcon-swoole-redis镜像"
+LABEL org.opencontainers.image.vendor="忐忑" \
+      org.opencontainers.image.authors="1174865138@qq.com" \
+      org.opencontainers.image.description="构建php镜像" \
+      org.opencontainers.image.source="https://github.com/twbworld/php"
 
-ARG PHALCON_VERSION=4.1.2
 #ARG SWOOLE_VERSION=4.5.2
 #ARG REDIS_VERSION=5.3.1
-ARG PSR_VERSION=1.0.0
-ARG PHALCON_EXT_PATH=php7/64bits
+ARG PHALCON_VERSION=4.1.2 \
+    PSR_VERSION=1.0.0 \
+    PHALCON_EXT_PATH=php7/64bits
 
 # 安装php扩展: https://www.jianshu.com/p/20fcca06e27e
 RUN set -xe \
@@ -16,11 +18,10 @@ RUN set -xe \
             libfreetype6-dev \
             libjpeg62-turbo-dev \
             libpng-dev \
-            git \
-            ssh \
-            cron \
             zlib1g-dev \
             libzip-dev \
+            cron \
+            ssh \
         && rm -r /var/lib/apt/lists/* \
         && docker-php-ext-configure gd --with-freetype=/usr/include/ --with-jpeg=/usr/include/ \
         && docker-php-ext-install -j$(nproc) \
@@ -39,12 +40,13 @@ RUN set -xe \
             sysvsem \
             sysvshm \
             zip \
-        && pecl install \
-            swoole \
+        && pecl install -o -f \
+            # swoole \
             redis \
+        && rm -rf /tmp/pear \
         && docker-php-ext-enable \
             redis \
-            swoole \
+            # swoole \
         # Download PSR, see https://github.com/jbboehr/php-psr
         && curl -LO https://github.com/jbboehr/php-psr/archive/v${PSR_VERSION}.tar.gz \
         && tar xzf ${PWD}/v${PSR_VERSION}.tar.gz \
