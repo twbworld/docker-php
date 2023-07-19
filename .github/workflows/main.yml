@@ -10,7 +10,7 @@ on:
 jobs:
 
   review:
-    uses: twbworld/proxy/.github/workflows/review.yml@test
+    uses: twbworld/proxy/.github/workflows/review.yml@main
     secrets: inherit #传递所有secrets, 被调用的不需要接收
 
   dependency-review:
@@ -58,7 +58,7 @@ jobs:
   push-images:
     needs: metadata
     if: needs.metadata.outputs.image-tags
-    uses: twbworld/proxy/.github/workflows/push-images.yaml@test
+    uses: twbworld/proxy/.github/workflows/push-images.yaml@main
     secrets: inherit
     with:
       image-tags: ${{ needs.metadata.outputs.image-tags }}
