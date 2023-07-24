@@ -11,6 +11,9 @@ ARG PHALCON_VERSION=4.1.2 \
     PSR_VERSION=1.0.0 \
     PHALCON_EXT_PATH=php7/64bits
 
+COPY php.ini /usr/local/etc/php/
+COPY www.conf /usr/local/etc/php-fpm.d/
+
 # 安装php扩展: https://www.jianshu.com/p/20fcca06e27e
 RUN set -xe \
     && apt-get update \
