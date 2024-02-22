@@ -1,4 +1,4 @@
-FROM --platform=$TARGETPLATFORM php:7.4-fpm
+FROM --platform=$TARGETPLATFORM php:8.1-fpm
 
 LABEL org.opencontainers.image.vendor="忐忑" \
       org.opencontainers.image.authors="1174865138@qq.com" \
@@ -7,9 +7,6 @@ LABEL org.opencontainers.image.vendor="忐忑" \
 
 #ARG SWOOLE_VERSION=4.5.2
 #ARG REDIS_VERSION=5.3.1
-ARG PHALCON_VERSION=4.1.2 \
-    PSR_VERSION=1.0.0 \
-    PHALCON_EXT_PATH=php7/64bits
 
 COPY php.ini /usr/local/etc/php/
 COPY www.conf /usr/local/etc/php-fpm.d/
@@ -26,11 +23,6 @@ RUN set -xe \
         cron \
         ssh \
         tzdata \
-    # Download PSR, see https://github.com/jbboehr/php-psr
-    && curl -L -O https://github.com/jbboehr/php-psr/archive/v${PSR_VERSION}.tar.gz \
-        -O https://github.com/phalcon/cphalcon/archive/v${PHALCON_VERSION}.tar.gz \
-    && tar -zxvf ${PWD}/v${PSR_VERSION}.tar.gz \
-    && tar -zxvf ${PWD}/v${PHALCON_VERSION}.tar.gz \
     && docker-php-ext-configure gd --with-freetype=/usr/include/ --with-jpeg=/usr/include/ \
     && docker-php-ext-install -j$(nproc) \
         gd \
@@ -48,8 +40,6 @@ RUN set -xe \
         sysvsem \
         sysvshm \
         zip \
-        ${PWD}/php-psr-${PSR_VERSION} \
-        ${PWD}/cphalcon-${PHALCON_VERSION}/build/${PHALCON_EXT_PATH} \
     && pecl install -o -f \
         # swoole \
         redis \
@@ -64,8 +54,6 @@ RUN set -xe \
     && apt-get autoclean \
     && rm -rf \
         ${PWD}/*.tar.gz \
-        ${PWD}/php-psr-${PSR_VERSION} \
-        ${PWD}/cphalcon-${PHALCON_VERSION} \
         /var/lib/apt/lists/* \
     && php -m
 
