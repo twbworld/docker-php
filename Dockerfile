@@ -1,4 +1,4 @@
-FROM --platform=$TARGETPLATFORM php:8.1-fpm
+FROM --platform=$TARGETPLATFORM php:7.4-fpm
 
 LABEL org.opencontainers.image.vendor="忐忑" \
       org.opencontainers.image.authors="1174865138@qq.com" \
