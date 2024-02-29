@@ -23,6 +23,11 @@ RUN set -xe \
         cron \
         ssh \
         tzdata \
+    && php -r "copy('https://install.phpcomposer.com/installer', 'composer-setup.php');" \
+    && php composer-setup.php \
+    && mv composer.phar /usr/local/bin/composer \
+    && composer config -g repo.packagist composer https://mirrors.aliyun.com/composer/ \
+    && composer selfupdate \
     && docker-php-ext-configure gd --with-freetype=/usr/include/ --with-jpeg=/usr/include/ \
     && docker-php-ext-install -j$(nproc) \
         gd \
@@ -55,6 +60,7 @@ RUN set -xe \
     && rm -rf \
         ${PWD}/*.tar.gz \
         /var/lib/apt/lists/* \
+        composer-setup.php \
     && php -m
 
 # COPY docker-phalcon-* /usr/local/bin/
