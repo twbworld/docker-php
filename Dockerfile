@@ -5,8 +5,8 @@ LABEL org.opencontainers.image.vendor="忐忑" \
       org.opencontainers.image.description="构建php镜像" \
       org.opencontainers.image.source="https://github.com/twbworld/php"
 
-# ARG SWOOLE_VERSION=4.8.13
 ARG REDIS_VERSION=6.0.2
+ARG SWOOLE_VERSION=4.8.13
 
 COPY php.ini /usr/local/etc/php/
 COPY www.conf /usr/local/etc/php-fpm.d/
@@ -47,7 +47,7 @@ RUN set -xe \
         zip \
     && pecl install -o -f \
         redis-${REDIS_VERSION} \
-        # swoole-${SWOOLE_VERSION} \
+        swoole-${SWOOLE_VERSION} \
     && docker-php-ext-enable \
         redis \
         # swoole \
