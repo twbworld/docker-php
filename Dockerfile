@@ -5,8 +5,8 @@ LABEL org.opencontainers.image.vendor="忐忑" \
       org.opencontainers.image.description="构建php镜像" \
       org.opencontainers.image.source="https://github.com/twbworld/php"
 
-#ARG SWOOLE_VERSION=4.5.2
-#ARG REDIS_VERSION=5.3.1
+# ARG SWOOLE_VERSION=4.8.13
+ARG REDIS_VERSION=6.0.2
 
 COPY php.ini /usr/local/etc/php/
 COPY www.conf /usr/local/etc/php-fpm.d/
@@ -46,9 +46,8 @@ RUN set -xe \
         sysvshm \
         zip \
     && pecl install -o -f \
-        # swoole \
-        redis \
-    && rm -rf /tmp/pear \
+        redis-${REDIS_VERSION} \
+        # swoole-${SWOOLE_VERSION} \
     && docker-php-ext-enable \
         redis \
         # swoole \
@@ -56,10 +55,15 @@ RUN set -xe \
     && echo "Asia/Shanghai" > /etc/timezone \
     && echo "net.core.default_qdisc=fq" >> /etc/sysctl.conf \
     && echo "net.ipv4.tcp_congestion_control=bbr" >> /etc/sysctl.conf \
-    && apt-get autoclean \
+    && apt-get clean -y \
+    && docker-php-source delete \
     && rm -rf \
-        ${PWD}/*.tar.gz \
+        /tmp/* \
         /var/lib/apt/lists/* \
+        /var/cache/debconf/* \
+        /var/log/* \
+        /var/tmp/* \
+        ${PWD}/*.tar.gz \
         composer-setup.php \
     && php -m
 
