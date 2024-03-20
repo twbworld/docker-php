@@ -50,7 +50,7 @@ RUN set -xe \
         swoole-${SWOOLE_VERSION} \
     && docker-php-ext-enable \
         redis \
-        # swoole \
+        swoole \
     && cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime \
     && echo "Asia/Shanghai" > /etc/timezone \
     && echo "net.core.default_qdisc=fq" >> /etc/sysctl.conf \
