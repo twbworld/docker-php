@@ -6,7 +6,7 @@ LABEL org.opencontainers.image.vendor="忐忑" \
       org.opencontainers.image.source="https://github.com/twbworld/php"
 
 ARG REDIS_VERSION=6.0.2
-ARG SWOOLE_VERSION=4.6.7
+ARG SWOOLE_VERSION=5.1.1
 
 COPY php.ini /usr/local/etc/php/
 COPY www.conf /usr/local/etc/php-fpm.d/
